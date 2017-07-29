@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { createPost } from '../actions';
 
 class PostsNew extends Component {
     renderField(field) {
@@ -22,7 +25,8 @@ class PostsNew extends Component {
     }
 
     onSubmit(values) {
-
+        this.props.history.push('/');
+        this.props.createPost(values);
     }
 
     render() {
@@ -46,6 +50,7 @@ class PostsNew extends Component {
                    component={this.renderField}
                />
                <button type="submit" className="btn btn-primary">Submit</button>
+               <Link to="/" className="btn btn-danger">Cancel</Link>
            </form>
         )
     }
@@ -54,9 +59,6 @@ class PostsNew extends Component {
 function validate(values) {
     const errors = {};
 
-    if(values.title.length < 4) {
-        errors.title = "Title must be at least 4 characters.";
-    }
     if (!values.title) {
         errors.title = "Enter a title.";
     }
@@ -72,4 +74,6 @@ function validate(values) {
 export default reduxForm({
     validate,
     form: 'PostsNewForm'
-})(PostsNew);
+})(
+    connect(null, { createPost })(PostsNew)
+);
